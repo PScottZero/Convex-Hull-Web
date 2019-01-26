@@ -1,0 +1,198 @@
+<!--
+Paul Scott
+25 January 2019
+
+code page of website
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- javascript -->
+    <script src="js/scripts.js"></script>
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!-- highlight.js code -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- style sheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/solarized-dark.css">
+
+    <!-- favicon and website title -->
+    <link rel="icon" href="img/favicon.png">
+    <title>Convex Hull</title>
+</head>
+<body>
+<!-- hamburger menu -->
+<div id="menu_button" onclick="menu()">
+    <div class="bar1"></div>
+    <div class="bar2"></div>
+    <div class="bar3"></div>
+</div>
+
+<!-- slide menu -->
+<div id="slide_menu">
+    <a href="index.html"> Visualization </a>
+    <a href="code.html"> View Code </a>
+    <a href="https://github.com/PScottZero/Pi-Cipher"> View on GitHub </a>
+    <a href="http://www.pjs4.com"> About Me </a>
+</div>
+
+<!-- code block -->
+<div id="code">
+    <pre><code>// NOTE: This code is the basic shell of the algorithm
+// The functional code can be viewed on GitHub
+
+class ConvexHull {
+
+    /**
+     * constructor
+     */
+    constructor() {
+
+        // set of points
+        this.points = [];
+
+        // stack
+        this.stack = [];
+    }
+
+    /**
+     * run graham scan algorithm
+     */
+    convexHull() {
+
+        // creates random set of points
+        this.generatePoints();
+
+        // gets index of point with the smallest value
+        // and sorts rest of points based on the cosine
+        // angle between the smallest y value point
+        this.getAngles(this.getMinY());
+
+        // sorts points by angle
+        this.points.sort(ConvexHull.compare); // sorts points by
+
+        // pushes first three point indexes to stack
+        this.stack.push(0);
+        this.stack.push(1);
+        this.stack.push(2);
+
+        // loops through remaining points
+        for (let i = 3; i < this.points.length; i++) {
+            while (this.stack.length !== 0) {
+                let p1 = this.stack[this.stack.length - 1];
+                let p2 = this.stack[this.stack.length - 2];
+
+                // calculates cross product of three points
+                // pops stack if 'right turn'
+                // pushes index to stack if 'left turn'
+                if (ConvexHull.crossProduct(this.points[p1], this.points[p2], this.points[i]) < 0) {
+                    this.stack.pop();
+                } else {
+                    this.stack.push(i);
+                }
+            }
+        }
+    }
+
+    /**
+     * compares point angles for sorting purposes
+     * @param point1
+     * @param point2
+     * @returns {number}
+     */
+    static compare(point1, point2) {
+        if (point1.angle < point2.angle) return -1;
+        if (point1.angle > point2.angle) return 1;
+        else return 0;
+    }
+
+    /**
+     * creates random set of points
+     */
+    generatePoints() {
+        let pointCount = Math.floor((Math.random() * 11)) + 10;
+        for (let i = 0; i < pointCount; i++) {
+            let x = Math.floor((Math.random() * 501));
+            let y = Math.floor((Math.random() * 501));
+            let point = new PointAngle(x, y, 0.0);
+            this.points.push(point);
+        }
+    }
+
+    /**
+     * returns index of point with smallest y value
+     * @returns index of point with lowest y value
+     */
+    getMinY() {
+        let minIndex = null;
+        for (let i = 0; i < this.points.length; i++) {
+            if (minIndex === null || this.points[minIndex].y > this.points[i].y) {
+                minIndex = i;
+            }
+        }
+        return minIndex;
+    }
+
+    /**
+     * calculates angles of all points based on
+     * point with lowest y value
+     * @param minIndex
+     */
+    getAngles(minIndex) {
+        let scaleX = this.points[minIndex].x;
+        let scaleY = this.points[minIndex].y;
+        for (let i = 0; i < this.points.length; i++) {
+
+            // adjusts x and y values so that minIndex point is (0,0)
+            let adjustX = parseFloat(this.points[i].x - scaleX);
+            let adjustY = parseFloat(this.points[i].y - scaleY);
+
+            // calculates polar angle in radians
+            let angle = Math.atan(adjustY / adjustX);
+            if (!Number.isNaN(angle)) {
+                if (angle < 0) angle += Math.PI;
+                this.points[i].angle = angle;
+            }
+        }
+    }
+
+    /**
+     * calculates cross product using three points
+     * @param point1
+     * @param point2
+     * @param point3
+     * @returns {number}
+     */
+    static crossProduct(point1, point2, point3) {
+
+        // vector 1
+        let vector1X = point1.x - point2.x;
+        let vector1Y = point1.y - point2.y;
+
+        // vector 2
+        let vector2X = point3.x - point2.x;
+        let vector2Y = point3.y - point2.y;
+
+        // cross product
+        return (vector1X * vector2Y) - (vector1Y * vector2X);
+    }
+}</code></pre>
+</div>
+
+<!-- footer -->
+<div id="footer_alt">
+    <p> Created By Paul Scott &bull; Computer Science &bull; Penn State '21 &bull; Last Updated 25 January 2019 </p>
+</div>
+</body>
+</html>

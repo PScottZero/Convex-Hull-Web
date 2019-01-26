@@ -1,0 +1,70 @@
+<!--
+Paul Scott
+25 January 2019
+
+main page of website
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- javascript -->
+    <script src="js/scripts.js"></script>
+    <script src="js/start-convex.js"></script>
+    <script src="js/ConvexHull.js"></script>
+    <script src="js/PointAngle.js"></script>
+
+    <!-- style sheet -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!-- favicon and website title -->
+    <link rel="icon" href="img/favicon.png">
+    <title>Convex Hull</title>
+</head>
+
+<body>
+
+<!-- hamburger menu -->
+<div id="menu_button" onclick="menu()">
+    <div class="bar1"></div>
+    <div class="bar2"></div>
+    <div class="bar3"></div>
+</div>
+
+<!-- slide menu -->
+<div id="slide_menu">
+    <a href="index.html"> Visualization </a>
+    <a href="code.html"> View Code </a>
+    <a href="https://github.com/PScottZero/Pi-Cipher"> View on GitHub </a>
+    <a href="http://www.pjs4.com"> About Me </a>
+</div>
+
+<!-- website content -->
+<div id="content">
+
+    <!-- title -->
+    <div id="title">
+        <p>Convex Hull - Graham Scan Algorithm</p>
+    </div>
+
+    <!-- convex hull canvas -->
+    <canvas id="convex"></canvas>
+
+    <!-- reset button -->
+    <input type="button" id="reset" onclick="reset()" value="Reset">
+</div>
+
+<!-- footer -->
+<div id="footer">
+    <p> Created By Paul Scott &bull; Computer Science &bull; Penn State '21 &bull; Last Updated 25 January 2019 </p>
+</div>
+</body>
+</html>
