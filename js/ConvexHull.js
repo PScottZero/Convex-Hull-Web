@@ -16,6 +16,7 @@ class ConvexHull {
         this.delay = 750; // animation delay
         this.finished = false;
         this.width = 600;
+        this.currentPoint = null;
     }
 
     /**
@@ -52,18 +53,17 @@ class ConvexHull {
             while (this.stack.length !== 0) {
                 let p1 = this.stack[this.stack.length - 1];
                 let p2 = this.stack[this.stack.length - 2];
+                this.currentPoint = i;
+                this.draw();
+                await new Promise(resolve => setTimeout(resolve, this.delay));
 
                 // calculates cross product of three points
                 // pops stack if 'right turn'
                 // pushes index to stack if 'left turn'
                 if (ConvexHull.crossProduct(this.points[p1], this.points[p2], this.points[i]) < 0) {
                     this.points[this.stack.pop()].inHull = false;
-                    this.draw();
-                    await new Promise(resolve => setTimeout(resolve, this.delay));
                 } else {
                     this.stack.push(i);
-                    this.draw();
-                    await new Promise(resolve => setTimeout(resolve, this.delay));
                     break;
                 }
             }
@@ -170,10 +170,21 @@ class ConvexHull {
         // draw lines of convex hull
         for (let j = 1; j < this.stack.length; j++) {
             ctx.beginPath();
-            if (j < this.stack.length - 1 || this.finished) ctx.strokeStyle = "#00a3cc";
-            else ctx.strokeStyle = "#00ccc1";
+            ctx.strokeStyle = "#00a3cc";
+            if (this.currentPoint == null && j === this.stack.length - 1) ctx.strokeStyle = "#00ccc1";
             let point1 = this.points[this.stack[j-1]];
             let point2 = this.points[this.stack[j]];
+            ctx.moveTo(point1.x + 50, (this.width - 50) - point1.y);
+            ctx.lineTo(point2.x + 50, (this.width - 50) - point2.y);
+            ctx.stroke();
+        }
+
+        // draws line connecting to current point being checked
+        if (this.stack.length > 0 && this.currentPoint !== null && !this.finished) {
+            ctx.beginPath();
+            ctx.strokeStyle = "#00ccc1";
+            let point1 = this.points[this.stack[this.stack.length-1]];
+            let point2 = this.points[this.currentPoint];
             ctx.moveTo(point1.x + 50, (this.width - 50) - point1.y);
             ctx.lineTo(point2.x + 50, (this.width - 50) - point2.y);
             ctx.stroke();
