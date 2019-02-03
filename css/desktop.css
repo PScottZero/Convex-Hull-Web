@@ -5,135 +5,154 @@ Paul Scott
 desktop stylesheet for convex hall website
  */
 
-@media(min-width: 720px) {
+@media (min-width: 720px) {
 
-    /* hamburger menu button styling */
-    .bar1, .bar2, .bar3 {
-        z-index: 3;
-        width: 3em;
-        height: 0.4em;
-        border-radius: 0.4em;
-        margin: 0.4em 0;
-        background: #00a3cc;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
-        transition: 0.2s;
-    }
+  /* hamburger menu button styling */
+  .bar1, .bar2, .bar3 {
+    z-index: 3;
+    width: 3em;
+    height: 0.4em;
+    border-radius: 0.4em;
+    margin: 0.4em 0;
+    background: #00a3cc;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+    transition: 0.2s;
+  }
 
-    /* convex hull canvas */
-    canvas {
-        display: block;
-        margin: auto;
-        width: 600px;
-        height: 600px;
-        border-radius: 1em;
-        background: #002b36;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
-    }
+  /* convex hull canvas */
+  canvas {
+    display: block;
+    margin: auto;
+    width: 600px;
+    height: 600px;
+    border-radius: 1em;
+    background: #002b36;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
+  }
 
-    /* hamburger menu button animation */
-    .change .bar1 { transform: translate(-0.1em, 0.8em) rotate(-45deg) }
-    .change .bar2 { opacity: 0 }
-    .change .bar3 { transform: translate(-0.1em, -0.8em) rotate(45deg) }
+  #canvas_container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 
-    /* code block */
-    #code {
-        position: relative;
-        padding: 4em;
-        margin: 7em auto 2em auto;
-        min-width: 35em;
-        max-width: 55em;
-        line-height: 1.5;
-        background: #002b36;
-        border-radius: 2em;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
-    }
+  /* hamburger menu button animation */
+  .change .bar1 {
+    transform: translate(-0.1em, 0.8em) rotate(-45deg)
+  }
 
-    /* footer */
-    #footer {
-        position: fixed;
-        z-index: -1;
-        bottom: 0;
-        padding: 1em;
-        left: 50%;
-        transform: translateX(-50%);
+  .change .bar2 {
+    opacity: 0
+  }
 
-        /* font */
-        text-align: center;
-        font-size: 18px;
-        color: #00a3cc;
-    }
+  .change .bar3 {
+    transform: translate(-0.1em, -0.8em) rotate(45deg)
+  }
 
-    /* alternative footer for code page */
-    #footer_alt {
-        text-align: center;
-        bottom: 0;
-        padding: 1em;
+  /* code block */
+  #code {
+    position: relative;
+    padding: 4em;
+    margin: 7em auto 2em auto;
+    min-width: 35em;
+    max-width: 65em;
+    line-height: 1.5;
+    background: #002b36;
+    border-radius: 2em;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
+  }
 
-        /* font */
-        font-size: 18px;
-        color: #00a3cc;
-    }
+  /* footer */
+  #footer {
+    position: fixed;
+    z-index: -1;
+    bottom: 0;
+    padding: 1em;
+    left: 50%;
+    transform: translateX(-50%);
 
-    /* code block font size */
-    .hljs { font-size: 18px }
+    /* font */
+    text-align: center;
+    font-size: 18px;
+    color: #00a3cc;
+  }
 
-    /* hamburger menu button */
-    #menu_button {
-        display: inline-block;
-        z-index: 3;
-        cursor: pointer;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 3em;
-        height: 3em;
-        margin-top: 2em;
-        margin-left: 2em;
-    }
+  /* alternative footer for code page */
+  #footer_alt {
+    text-align: center;
+    bottom: 0;
+    padding: 1em;
 
-    /* reset button */
-    #reset {
-        display: none;
-        margin: -3em auto auto auto;
-        z-index: 2;
-        padding: 0.5em 1em;
-        border-radius: 2em;
-        background: #00a3cc;
-        color: white;
-        font-size: 16px;
-    }
+    /* font */
+    font-size: 18px;
+    color: #00a3cc;
+  }
 
-    /* slide menu */
-    #slide_menu {
-        position: fixed;
-        z-index: 2;
-        width: 20em;
-        height: 100%;
-        overflow-x: hidden;
-        padding-top: 8em;
-        text-align: left;
-        line-height: 2;
-        top: 0;
-        left: -21em;
-        background: white;
-        transition: 0.2s;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.25);
-    }
+  /* code block font size */
+  .hljs {
+    font-size: 18px
+  }
 
-    /* links in slide menu */
-    #slide_menu a {
-        display: block;
-        font-size: 36px;
-        margin-left: 1em;
-    }
+  /* hamburger menu button */
+  #menu_button {
+    display: inline-block;
+    z-index: 3;
+    cursor: pointer;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 3em;
+    height: 3em;
+    margin-top: 2em;
+    margin-left: 2em;
+  }
 
-    /* website title on index page */
-    #title {
-        font-weight: bold;
-        font-size: 24px;
-        padding: 1em;
-        margin-top: 2em;
-        color: #00a3cc;
-        text-align: center;
-    }
+  /* reset button */
+  #reset {
+    z-index: 1;
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0.5em 1em;
+    border-radius: 2em;
+    background: #00a3ccaa;
+    color: white;
+    font-size: 20px;
+  }
+
+  /* slide menu */
+  #slide_menu {
+    position: fixed;
+    z-index: 2;
+    width: 20em;
+    height: 100%;
+    overflow-x: hidden;
+    padding-top: 8em;
+    text-align: left;
+    line-height: 2;
+    top: 0;
+    left: -21em;
+    background: white;
+    transition: 0.2s;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.25);
+  }
+
+  /* links in slide menu */
+  #slide_menu a {
+    display: block;
+    font-size: 36px;
+    margin-left: 1em;
+  }
+
+  /* website title on index page */
+  #title {
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 0.5em;
+    color: #00a3cc;
+    text-align: center;
+  }
 }

@@ -8,46 +8,46 @@ code page of website
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
 
-    <!-- javascript -->
-    <script src="js/scripts.js"></script>
+  <!-- javascript -->
+  <script src="js/scripts.js"></script>
 
-    <!-- jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    <!-- font -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <!-- font -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
-    <!-- highlight.js code -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+  <!-- highlight.js code -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 
-    <!-- style sheets -->
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/mobile.css">
-    <link rel="stylesheet" href="css/desktop.css">
-    <link rel="stylesheet" href="css/solarized-dark.css">
+  <!-- style sheets -->
+  <link href="css/styles.css" rel="stylesheet">
+  <link href="css/mobile.css" rel="stylesheet">
+  <link href="css/desktop.css" rel="stylesheet">
+  <link href="css/solarized-dark.css" rel="stylesheet">
 
-    <!-- favicon and website title -->
-    <link rel="icon" href="img/favicon.png">
-    <title>Convex Hull</title>
+  <!-- favicon and website title -->
+  <link href="img/favicon.png" rel="icon">
+  <title>Convex Hull</title>
 </head>
 <body>
 <!-- hamburger menu -->
 <div id="menu_button" onclick="menu()">
-    <div class="bar1"></div>
-    <div class="bar2"></div>
-    <div class="bar3"></div>
+  <div class="bar1"></div>
+  <div class="bar2"></div>
+  <div class="bar3"></div>
 </div>
 
 <!-- slide menu -->
 <div id="slide_menu">
-    <a href="index.html"> Visualization </a>
-    <a href="code.html"> View Code </a>
-    <a href="https://github.com/PScottZero/Convex-Hull-Web"> View on GitHub </a>
-    <a href="http://www.pjs4.com"> About Me </a>
+  <a href="index.html"> Visualization </a>
+  <a href="code.html"> View Code </a>
+  <a href="https://github.com/PScottZero/Convex-Hull-Web"> View on GitHub </a>
+  <a href="http://www.pjs4.com"> About Me </a>
 </div>
 
 <!-- code block -->
@@ -57,145 +57,142 @@ code page of website
 
 class ConvexHull {
 
-    /**
-     * constructor
-     */
-    constructor() {
+  /**
+   * constructor
+   */
+  constructor() {
+    this.points = []; // set of points
+    this.stack = []; // stack
+  }
 
-        // set of points
-        this.points = [];
+  /**
+   * compares point angles for sorting purposes
+   * @param point1
+   * @param point2
+   * @returns {number}
+   */
+  static compare(point1, point2) {
+    if (point1.angle < point2.angle) return -1;
+    if (point1.angle > point2.angle) return 1;
+    else return 0;
+  }
 
-        // stack
-        this.stack = [];
-    }
+  /**
+   * calculates cross product using three points
+   * @param point1
+   * @param point2
+   * @param point3
+   * @returns {number}
+   */
+  static crossProduct(point1, point2, point3) {
 
-    /**
-     * run graham scan algorithm
-     */
-    convexHull() {
+    // vector 1
+    let vector1X = point1.x - point2.x;
+    let vector1Y = point1.y - point2.y;
 
-        // creates random set of points
-        this.generatePoints();
+    // vector 2
+    let vector2X = point3.x - point2.x;
+    let vector2Y = point3.y - point2.y;
 
-        // gets index of point with the smallest value
-        // and sorts rest of points based on the cosine
-        // angle between the smallest y value point
-        this.getAngles(this.getMinY());
+    // cross product
+    return (vector1X * vector2Y) - (vector1Y * vector2X);
+  }
 
-        // sorts points by angle
-        this.points.sort(ConvexHull.compare); // sorts points by
+  /**
+   * run graham scan algorithm
+   */
+  convexHull() {
 
-        // pushes first three point indexes to stack
-        this.stack.push(0);
-        this.stack.push(1);
-        this.stack.push(2);
+    // creates random set of points
+    this.generatePoints();
 
-        // loops through remaining points
-        for (let i = 3; i < this.points.length; i++) {
-            while (this.stack.length !== 0) {
-                let p1 = this.stack[this.stack.length - 1];
-                let p2 = this.stack[this.stack.length - 2];
+    // gets index of point with the smallest value
+    // and sorts rest of points based on the cosine
+    // angle between the smallest y value point
+    this.getAngles(this.getMinY());
 
-                // calculates cross product of three points
-                // pops stack if 'right turn'
-                // pushes index to stack if 'left turn'
-                if (ConvexHull.crossProduct(this.points[p1], this.points[p2], this.points[i]) < 0) {
-                    this.stack.pop();
-                } else {
-                    this.stack.push(i);
-                }
-            }
+    // sorts points by angle
+    this.points.sort(ConvexHull.compare);
+
+    // pushes first three point indexes to stack
+    this.stack.push(0);
+    this.stack.push(1);
+    this.stack.push(2);
+
+    // loops through remaining points
+    for (let i = 3; i < this.points.length; i++) {
+      while (this.stack.length !== 0) {
+        let p1 = this.stack[this.stack.length - 1];
+        let p2 = this.stack[this.stack.length - 2];
+
+        // calculates cross product of three points
+        // pops stack if 'right turn'
+        // pushes index to stack if 'left turn'
+        if (ConvexHull.crossProduct(this.points[p1], this.points[p2], this.points[i]) < 0) {
+          this.stack.pop();
+        } else {
+          this.stack.push(i);
+          break;
         }
+      }
     }
+  }
 
-    /**
-     * compares point angles for sorting purposes
-     * @param point1
-     * @param point2
-     * @returns {number}
-     */
-    static compare(point1, point2) {
-        if (point1.angle < point2.angle) return -1;
-        if (point1.angle > point2.angle) return 1;
-        else return 0;
+  /**
+   * creates random set of points
+   */
+  generatePoints() {
+    let pointCount = Math.floor((Math.random() * 11)) + 10;
+    for (let i = 0; i < pointCount; i++) {
+      let x = Math.floor((Math.random() * (this.width - 99)));
+      let y = Math.floor((Math.random() * (this.width - 99)));
+      let point = new PointAngle(x, y, 0.0, true);
+      this.points.push(point);
     }
+  }
 
-    /**
-     * creates random set of points
-     */
-    generatePoints() {
-        let pointCount = Math.floor((Math.random() * 11)) + 10;
-        for (let i = 0; i < pointCount; i++) {
-            let x = Math.floor((Math.random() * 501));
-            let y = Math.floor((Math.random() * 501));
-            let point = new PointAngle(x, y, 0.0);
-            this.points.push(point);
-        }
+  /**
+   * returns index of point with smallest y value
+   * @returns index of point with lowest y value
+   */
+  getMinY() {
+    let minIndex = null;
+    for (let i = 0; i < this.points.length; i++) {
+      if (minIndex === null || this.points[minIndex].y > this.points[i].y) {
+        minIndex = i;
+      }
     }
+    return minIndex;
+  }
 
-    /**
-     * returns index of point with smallest y value
-     * @returns index of point with lowest y value
-     */
-    getMinY() {
-        let minIndex = null;
-        for (let i = 0; i < this.points.length; i++) {
-            if (minIndex === null || this.points[minIndex].y > this.points[i].y) {
-                minIndex = i;
-            }
-        }
-        return minIndex;
+  /**
+   * calculates angles of all points based on
+   * point with lowest y value
+   * @param minIndex
+   */
+  getAngles(minIndex) {
+    let scaleX = this.points[minIndex].x;
+    let scaleY = this.points[minIndex].y;
+    for (let i = 0; i < this.points.length; i++) {
+
+      // adjusts x and y values so that minIndex point is (0,0)
+      let adjustX = parseFloat(this.points[i].x - scaleX);
+      let adjustY = parseFloat(this.points[i].y - scaleY);
+
+      // calculates polar angle in radians
+      let angle = Math.atan(adjustY / adjustX);
+      if (!Number.isNaN(angle)) {
+        if (angle < 0) angle += Math.PI;
+        this.points[i].angle = angle;
+      }
     }
-
-    /**
-     * calculates angles of all points based on
-     * point with lowest y value
-     * @param minIndex
-     */
-    getAngles(minIndex) {
-        let scaleX = this.points[minIndex].x;
-        let scaleY = this.points[minIndex].y;
-        for (let i = 0; i < this.points.length; i++) {
-
-            // adjusts x and y values so that minIndex point is (0,0)
-            let adjustX = parseFloat(this.points[i].x - scaleX);
-            let adjustY = parseFloat(this.points[i].y - scaleY);
-
-            // calculates polar angle in radians
-            let angle = Math.atan(adjustY / adjustX);
-            if (!Number.isNaN(angle)) {
-                if (angle < 0) angle += Math.PI;
-                this.points[i].angle = angle;
-            }
-        }
-    }
-
-    /**
-     * calculates cross product using three points
-     * @param point1
-     * @param point2
-     * @param point3
-     * @returns {number}
-     */
-    static crossProduct(point1, point2, point3) {
-
-        // vector 1
-        let vector1X = point1.x - point2.x;
-        let vector1Y = point1.y - point2.y;
-
-        // vector 2
-        let vector2X = point3.x - point2.x;
-        let vector2Y = point3.y - point2.y;
-
-        // cross product
-        return (vector1X * vector2Y) - (vector1Y * vector2X);
-    }
+  }
 }</code></pre>
 </div>
 
 <!-- footer -->
 <div id="footer_alt">
-    <p> Created By Paul Scott &bull; Computer Science &bull; Penn State '21 &bull; Last Updated 26 January 2019 </p>
+  <p> Created By Paul Scott &bull; Computer Science &bull; Penn State '21 &bull; Last Updated 3 February 2019 </p>
 </div>
 </body>
 </html>
