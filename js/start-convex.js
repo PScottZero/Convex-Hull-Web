@@ -15,7 +15,7 @@ $(document).ready(function () {
   canvas.height = 1200;
   canvas.getContext("2d").scale(2, 2);
   canvas.getContext("2d").font = "24px Arial";
-  ch.convexHull();
+  ch.grahamScan();
 });
 
 /**
@@ -23,5 +23,5 @@ $(document).ready(function () {
  */
 function reset() {
   let ch = new ConvexHull();
-  ch.convexHull();
+  ch.grahamScan();
 }

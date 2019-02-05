@@ -32,31 +32,10 @@ class ConvexHull {
   }
 
   /**
-   * calculates cross product using three points
-   * @param point1
-   * @param point2
-   * @param point3
-   * @returns {number}
-   */
-  static crossProduct(point1, point2, point3) {
-
-    // vector 1
-    let vector1X = point1.x - point2.x;
-    let vector1Y = point1.y - point2.y;
-
-    // vector 2
-    let vector2X = point3.x - point2.x;
-    let vector2Y = point3.y - point2.y;
-
-    // cross product
-    return (vector1X * vector2Y) - (vector1Y * vector2X);
-  }
-
-  /**
    * run graham scan algorithm
    * @returns {Promise<void>}
    */
-  async convexHull() {
+  async grahamScan() {
     document.getElementById("reset").style.display = "none";
 
     // creates random set of points
@@ -84,8 +63,8 @@ class ConvexHull {
     // loops through remaining points
     for (let i = 3; i < this.points.length; i++) {
       while (this.stack.length !== 0) {
-        let p1 = this.stack[this.stack.length - 1];
-        let p2 = this.stack[this.stack.length - 2];
+        let p1 = this.stack[this.stack.length - 2];
+        let p2 = this.stack[this.stack.length - 1];
         this.currentPoint = i;
         this.draw();
         await new Promise(resolve => setTimeout(resolve, this.delay));
@@ -104,6 +83,28 @@ class ConvexHull {
     this.finished = true;
     this.draw();
     document.getElementById("reset").style.display = "block";
+  }
+
+  /**
+   * calculates cross product of
+   * vectors P1P2--> and P1P3-->
+   * @param point1
+   * @param point2
+   * @param point3
+   * @returns {number}
+   */
+  static crossProduct(point1, point2, point3) {
+
+    // vector P1P2-->
+    let vector1X = point2.x - point1.x;
+    let vector1Y = point2.y - point1.y;
+
+    // vector P1P3-->
+    let vector2X = point3.x - point1.x;
+    let vector2Y = point3.y - point1.y;
+
+    // cross product
+    return (vector1X * vector2Y) - (vector1Y * vector2X);
   }
 
   /**
