@@ -1,6 +1,6 @@
 /**
  * @author Paul Scott
- * @version 25 January 2019
+ * @version 26 March 2019
  *
  * code that starts and resets convex hull algorithm
  */
@@ -13,7 +13,7 @@ class ConvexHull {
   constructor() {
     this.points = []; // set of points
     this.stack = []; // stack
-    this.delay = 750; // animation delay
+    this.delay = 1000; // animation delay
     this.finished = false;
     this.width = 600;
     this.currentPoint = null;
@@ -122,12 +122,12 @@ class ConvexHull {
 
   /**
    * returns index of point with smallest y value
-   * @returns index of point with lowest y value
+   * @returns number of point with lowest y value
    */
   getMinY() {
     let minIndex = null;
     for (let i = 0; i < this.points.length; i++) {
-      if (minIndex === null || this.points[minIndex].y > this.points[i].y) {
+      if (minIndex == null || this.points[minIndex].y > this.points[i].y) {
         minIndex = i;
       }
     }
@@ -145,8 +145,8 @@ class ConvexHull {
     for (let i = 0; i < this.points.length; i++) {
 
       // adjusts x and y values so that minIndex point is (0,0)
-      let adjustX = parseFloat(this.points[i].x - scaleX);
-      let adjustY = parseFloat(this.points[i].y - scaleY);
+      let adjustX = this.points[i].x - scaleX;
+      let adjustY = this.points[i].y - scaleY;
 
       // calculates polar angle in radians
       let angle = Math.atan(adjustY / adjustX);
@@ -161,9 +161,9 @@ class ConvexHull {
    * draw visualization
    */
   draw() {
-    let canvas = document.getElementById("convex");
+    let canvas = document.getElementById("graham");
     let ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, 800, 800);
+    ctx.clearRect(0, 0, 600, 600);
     ctx.lineWidth = 8;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
@@ -171,8 +171,8 @@ class ConvexHull {
     // draw lines of convex hull
     for (let j = 1; j < this.stack.length; j++) {
       ctx.beginPath();
-      ctx.strokeStyle = "#00a3cc";
-      if (this.currentPoint == null && j === this.stack.length - 1) ctx.strokeStyle = "#00ccc1";
+      ctx.strokeStyle = "#6483b7";
+      if (this.currentPoint == null && j === this.stack.length - 1) ctx.strokeStyle = "#1058d1";
       let point1 = this.points[this.stack[j - 1]];
       let point2 = this.points[this.stack[j]];
       ctx.moveTo(point1.x + 50, (this.width - 50) - point1.y);
@@ -183,7 +183,7 @@ class ConvexHull {
     // draws line connecting to current point being checked
     if (this.stack.length > 0 && this.currentPoint !== null && !this.finished) {
       ctx.beginPath();
-      ctx.strokeStyle = "#00ccc1";
+      ctx.strokeStyle = "#1058d1";
       let point1 = this.points[this.stack[this.stack.length - 1]];
       let point2 = this.points[this.currentPoint];
       ctx.moveTo(point1.x + 50, (this.width - 50) - point1.y);
@@ -204,7 +204,7 @@ class ConvexHull {
     // draw points in set
     for (let i = 0; i < this.points.length; i++) {
       if (this.points[i].inHull) ctx.fillStyle = "#FFF";
-      else ctx.fillStyle = "#007c9b";
+      else ctx.fillStyle = "#c5d2ea";
       ctx.beginPath();
       ctx.arc(this.points[i].x + 50, (this.width - 50) - this.points[i].y,
           5, 0, 2 * Math.PI);

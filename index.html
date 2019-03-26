@@ -4,7 +4,6 @@ Paul Scott
 
 main page of website
 -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,60 +15,183 @@ main page of website
 
   <!-- javascript -->
   <script src="js/scripts.js"></script>
-  <script src="js/start-convex.js"></script>
   <script src="js/GrahamScan.js"></script>
   <script src="js/PointAngle.js"></script>
 
   <!-- style sheet -->
-  <link href="css/styles.css" rel="stylesheet">
-  <link href="css/mobile.css" rel="stylesheet">
   <link href="css/desktop.css" rel="stylesheet">
+  <link href="css/mobile.css" rel="stylesheet">
 
   <!-- font -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
   <!-- favicon and website title -->
   <link href="img/favicon.png" rel="icon">
-  <title>Convex Hull</title>
+  <title>Graham Scan</title>
 </head>
 
 <body>
 
-<!-- hamburger menu -->
-<div id="menu_button" onclick="menu()">
-  <div class="bar1"></div>
-  <div class="bar2"></div>
-  <div class="bar3"></div>
-</div>
+<!-- nav bar -->
+<nav>
 
-<!-- slide menu -->
-<div id="slide_menu">
-  <a href="index.html"> Visualization </a>
-  <a href="code.html"> View Code </a>
-  <a href="https://github.com/PScottZero/Convex-Hull-Web"> View on GitHub </a>
-  <a href="http://www.pjs4.com"> About Me </a>
-</div>
+  <!-- logo -->
+  <img src="img/logo.svg" alt="Graham Scan">
+
+  <!-- links -->
+  <a href="https://github.com/PScottZero/Convex-Hull-Web"> GitHub </a>
+  <a href="http://www.pjs4.com"> About </a>
+</nav>
 
 <!-- website content -->
 <div id="content">
 
-  <!-- title -->
-  <div id="canvas_container">
-    <div id="title">
-      <p>Convex Hull - Graham Scan Algorithm</p>
-    </div>
-
-    <!-- convex hull canvas -->
-    <canvas id="convex"></canvas>
+  <!-- convex hull container -->
+  <div id="convex">
+    <canvas id="graham"></canvas>
+    <input id="reset" onclick="reset()" type="button" value="Reset">
   </div>
-</div>
 
-<!-- reset button -->
-<input id="reset" onclick="reset()" type="button" value="Reset">
+  <!-- code container -->
+  <div id="code">
+    <pre><code>// NOTE: This code is the basic shell of the GS algorithm
+// The functional code can be viewed on GitHub
 
-<!-- footer -->
-<div id="footer">
-  <p> Created By Paul Scott &bull; Computer Science &bull; Penn State '21 &bull; Last Updated 5 February 2019 </p>
+class GrahamScan {
+
+  /**
+   * constructor
+   */
+  constructor() {
+    this.points = []; // set of points
+    this.stack = []; // stack
+  }
+
+  /**
+   * compares point angles for sorting purposes
+   * @param point1
+   * @param point2
+   * @returns {number}
+   */
+  static compare(point1, point2) {
+    if (point1.angle < point2.angle) return -1;
+    if (point1.angle > point2.angle) return 1;
+    else return 0;
+  }
+
+  /**
+   * run graham scan algorithm
+   */
+  grahamScan() {
+
+    // creates random set of points
+    this.generatePoints();
+
+    // gets index of point with the smallest value
+    // and sorts rest of points based on the cosine
+    // angle between the smallest y value point
+    this.getAngles(this.getMinY());
+
+    // sorts points by angle
+    this.points.sort(ConvexHull.compare);
+
+    // pushes first three point indexes to stack
+    this.stack.push(0);
+    this.stack.push(1);
+    this.stack.push(2);
+
+    // loops through remaining points
+    for (let i = 3; i < this.points.length; i++) {
+      while (this.stack.length !== 0) {
+        let p1 = this.stack[this.stack.length - 2];
+        let p2 = this.stack[this.stack.length - 1];
+
+        // calculates cross product of three points
+        // pops stack if 'right turn'
+        // pushes index to stack if 'left turn'
+        if (ConvexHull.crossProduct(this.points[p1], this.points[p2], this.points[i]) < 0) {
+          this.stack.pop();
+        } else {
+          this.stack.push(i);
+          break;
+        }
+      }
+    }
+  }
+
+  /**
+   * calculates cross product of
+   * vectors P1P2--> and P1P3-->
+   * @param point1
+   * @param point2
+   * @param point3
+   * @returns {number}
+   */
+  static crossProduct(point1, point2, point3) {
+
+    // vector P1P2-->
+    let vector1X = point2.x - point1.x;
+    let vector1Y = point2.y - point1.y;
+
+    // vector P1P3-->
+    let vector2X = point3.x - point1.x;
+    let vector2Y = point3.y - point1.y;
+
+    // cross product
+    return (vector1X * vector2Y) - (vector1Y * vector2X);
+  }
+
+  /**
+   * creates random set of points
+   */
+  generatePoints() {
+    let pointCount = Math.floor((Math.random() * 11)) + 10;
+    for (let i = 0; i < pointCount; i++) {
+      let x = Math.floor((Math.random() * (this.width - 99)));
+      let y = Math.floor((Math.random() * (this.width - 99)));
+      let point = new PointAngle(x, y, 0.0, true);
+      this.points.push(point);
+    }
+  }
+
+  /**
+   * returns index of point with smallest y value
+   * @returns index of point with lowest y value
+   */
+  getMinY() {
+    let minIndex = null;
+    for (let i = 0; i < this.points.length; i++) {
+      if (minIndex == null || this.points[minIndex].y > this.points[i].y) {
+        minIndex = i;
+      }
+    }
+    return minIndex;
+  }
+
+  /**
+   * calculates angles of all points based on
+   * point with lowest y value
+   * @param minIndex
+   */
+  getAngles(minIndex) {
+    let scaleX = this.points[minIndex].x;
+    let scaleY = this.points[minIndex].y;
+    for (let i = 0; i < this.points.length; i++) {
+
+      // adjusts x and y values so that minIndex point is (0,0)
+      let adjustX = this.points[i].x - scaleX;
+      let adjustY = this.points[i].y - scaleY;
+
+      // calculates polar angle in radians
+      let angle = Math.atan(adjustY / adjustX);
+      if (!Number.isNaN(angle)) {
+        if (angle < 0) angle += Math.PI;
+        this.points[i].angle = angle;
+      }
+    }
+  }
+}</code></pre>
+  </div>
 </div>
 </body>
 </html>

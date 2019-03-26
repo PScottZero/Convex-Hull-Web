@@ -1,18 +1,29 @@
 /**
  * @author Paul Scott
- * @version 25 January 2019
+ * @version 26 March 2019
  *
- * handles menu functions of website
+ * code that starts and resets graham scan algorithm
  */
 
 /**
- * toggles slide menu
+ * start convex hull
  */
-function menu() {
-  document.getElementById("menu_button").classList.toggle("change");
+$(document).ready(function () {
+  let ch = new ConvexHull();
+  let canvas = document.getElementById("graham");
+  canvas.width = 1200;
+  canvas.height = 1200;
+  canvas.getContext("2d").scale(2, 2);
+  canvas.getContext("2d").font = "24px Arial";
+  // noinspection JSIgnoredPromiseFromCall
+  ch.grahamScan();
+});
 
-  let slide = document.getElementById("slide_menu");
-  if (slide.style.left === "0em") {
-    slide.style.left = "-21em";
-  } else slide.style.left = "0em";
+/**
+ * reset convex hull
+ */
+function reset() {
+  let ch = new ConvexHull();
+  // noinspection JSIgnoredPromiseFromCall
+  ch.grahamScan();
 }
